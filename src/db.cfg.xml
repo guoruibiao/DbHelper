@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project>
+	<database name="mysql">
+		<driver>com.mysql.jdbc.Driver</driver>
+		<url>jdbc:mysql://localhost:3306/fams</url>
+		<user>root</user>
+		<password>mysql</password>
+	</database>
+
+
+</project>
