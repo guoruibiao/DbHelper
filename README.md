@@ -1,5 +1,5 @@
 # DbHelper
-一个比Apache-commons-dbutils更加好用，更加只能的微型框架
+一个比Apache-commons-dbutils更加好用，更加简洁轻便的微型框架
 ![镇楼图](http://img.blog.csdn.net/20160719164640373)
 ---
 
