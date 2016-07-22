@@ -5,7 +5,8 @@
 
 ## 如何使用
 
-- 首先在项目的src目录下创建一个db.cfg.xml的文件，格式如下：
+- Step 1：
+	首先在项目的src目录下创建一个db.cfg.xml的文件，格式如下：
 ```
 <?xml version="1.0" encoding="UTF-8" ?>
 <project>
@@ -19,9 +20,14 @@
 </project>
 ```
 
-- 然后是初始化工作，调用`DbHelper.register()`即可
+- Step 2:
+	通过注册的方式实现配置文件中的数据源的配置
+	`Dbhelper.register()`即可
 
-- 再然后就可以使用`QueryRunner`来操作你的数据库结果集以及bean对象了(无需手动关闭conn或者调用DbHelper相关方法关闭)。不妨看看下面的几个小实例。
+
+- Step 3：
+	主要的业务逻辑操作类`QueryRunner`，封装了对数据库JDBC操作的增删改查等一系列的操作。
+	对于update方法的JDBC操作，我们无需手动的关闭数据库连接，仅仅简单的通过DbHelper的重载的release方法来实现对数据库连接对象，查询语句以及数据集的关闭操作。是不是感觉很省心啊。
 
 
 ---
@@ -123,6 +129,66 @@ DateTest [id=1, name=dlut, date=Wed Jul 06 00:00:00 CST 2016]
 DateTest [id=2, name=清华大学, date=Sun Jul 03 00:00:00 CST 2016]
 DateTest [id=3, name=北京大学, date=Thu Jul 28 00:00:00 CST 2016]
 ------------------------------------------------------
+```
+
+通用的使用方式大致如下
+
+ 获取集合形式的封装结果集
+```
+// 对于无参的查询封装操作
+@Test
+public void test() throws Exeption {
+	Connection conn = DbHelper.getConn();
+	String sql = "select * from yourtablename";
+	QueryRunner runner = new QUeryRunner();
+	List<YourBean> yourbaen =  (List<YourBean>) runner.query(conn,sql,new BeanListHandler<YourBean>(YourBean.class));
+	System.out.println(yourbean.toString());
+	// 可以手动的进行数据库连接对象的关闭操作
+	DbHelper.release(conn);
+}
+
+```
+使用不定参数的查询语句，返回ResultSet的对应的JavaBean对象的实例
+
+```
+@Test
+public void test1() throws Exception {
+	Connection conn = DbHelper.getConn();
+	String sql = "select * from youtablename where columnname=?";
+	Object[] params = {'admin'};
+	QueryRunner runner = new QueryRuner();
+	YourBean yourbean = runner.query(conn,sql, new BeanHandler<YourBean>(YourBean.class),params);
+	DbHelper.release(conn);
+	System.out.println(yourbean.toString());
+}
+```
+
+使用不定参数的演示实例
+```
+@Test
+public void test2() throws Exception {
+	Connection conn = DbHelper.getConn();
+	String sql = "select ? from yourtablename  where id=?";
+	Object[] params = {"admin",2};
+	QueryRunner runner = new QueryRunner();
+	YourBean yourbean = runner.query(conn,sql,new BeanHandler<YourBean>(YourBean.class),params);
+	System.out.println(yourbean.toString());
+	DbHelper.release(conn);
+}
+```
+
+  更新Update方式
+```
+@Test
+public void test3() throws Exception {
+	Connection conn = DbHelper.getConn();
+	String sql = "update yourtablename set columnname=? where columnname=?";
+	Object[] params = {"admin","anothervalue"};
+	QueryRunner runner = new QueryRunner();
+	runner.update(conn,sql,params);
+	System.out.println("Update database success!");
+}
+
 ```
 
 ## 延伸
