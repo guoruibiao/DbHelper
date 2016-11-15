@@ -195,3 +195,8 @@ public void test3() throws Exception {
 
 由于源代码可以随意更改，所以你可以根据自己的需求来实现私人定制。仅仅需要实现自己的handler接口就可以了。
 如果你看到了这篇文章，欢迎给我提issue。当然也可以修改成你自己的工具。
+
+
+## 快速应用
+
+不妨参照下面的这篇文章，相信会给您些许灵感。http://blog.csdn.net/marksinoberg/article/details/53163704
