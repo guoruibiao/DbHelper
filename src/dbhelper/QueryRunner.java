@@ -102,6 +102,14 @@ public class QueryRunner {
 	public <T> List<T> query(Connection conn, String sql, BeanListHandler<T> beanListHandler, Object... params)
 			throws Exception {
 		PreparedStatement ps = conn.prepareStatement(sql);
+		/**
+		*  fixed bug:  之前忘记了处理params对应于sql语句中的占位符表达了，所以可能导致sql语句未赋值的问题。现已解决。
+		*/
+		if (params != null) {
+			for (int i = 0; i < params.length; i++) {
+				ps.setObject((i + 1), params[i]);
+			}
+		}
 		ResultSet rs = ps.executeQuery();
 		return beanListHandler.handle(rs);
 	}
